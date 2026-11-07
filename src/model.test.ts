@@ -179,3 +179,45 @@ test("seven source-backed shapes reproduce the uploaded contours without rotatio
   }
   assert.equal(checked, 7);
 });
+
+test("outline color survives collection restoration and old candidates default to black", () => {
+  const { outlineColor: _, ...legacy } = DEFAULT;
+  assert.equal(validateConfig(legacy)?.outlineColor, "#000000");
+  assert.equal(validateConfig({ ...DEFAULT, outlineColor: "#FF0000" }), null);
+  const config = {
+    ...DEFAULT,
+    outline: true,
+    outlineColor: "#FFFFFF" as const,
+  };
+  assert.equal(
+    parseCollection(JSON.stringify([{ id: "white", config }]))[0].config
+      .outlineColor,
+    "#FFFFFF",
+  );
+  assert.notEqual(
+    fingerprint(config),
+    fingerprint({ ...config, outlineColor: "#000000" }),
+  );
+  assert.equal(
+    fingerprint(DEFAULT),
+    fingerprint({ ...DEFAULT, outlineColor: "#FFFFFF" }),
+  );
+});
+
+test("SVG rasterization uses the selected white or black outline", () => {
+  for (const color of ["#000000", "#FFFFFF"] as const) {
+    const svg = svgMarkup({
+      ...DEFAULT,
+      outline: true,
+      outlineColor: color,
+      thickness: 24,
+    });
+    const pixels = new Resvg(svg).render().pixels;
+    const offset = (512 * 1024 + 120) * 4;
+    const channel = color === "#FFFFFF" ? 255 : 0;
+    assert.deepEqual(
+      [...pixels.slice(offset, offset + 4)],
+      [channel, channel, channel, 255],
+    );
+  }
+});

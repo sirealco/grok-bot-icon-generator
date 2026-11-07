@@ -87,7 +87,7 @@ export default function Icon({
       <path
         d={shape.d}
         fill={config.color}
-        stroke={config.outline ? "#000" : undefined}
+        stroke={config.outline ? config.outlineColor : undefined}
         strokeWidth={config.outline ? config.thickness * 2 : undefined}
         strokeLinejoin="round"
         paintOrder="stroke fill"

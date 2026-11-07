@@ -1616,3 +1616,44 @@ svg {
     animation: none !important;
   }
 }
+
+.outline-colors {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.outline-colors legend {
+  font-size: 12px;
+  margin-bottom: 14px;
+  padding: 0;
+}
+.outline-color-options {
+  display: flex;
+  gap: 8px;
+}
+.outline-color-options button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  height: 42px;
+  border: 1px solid #e1e1e1;
+  border-radius: 999px;
+  font-size: 11px;
+  background: #fff;
+}
+.outline-color-options button.selected {
+  border-color: #111;
+  background: #fafafa;
+}
+.outline-color-options button:not(:disabled):hover {
+  border-color: #777;
+}
+.outline-swatch {
+  width: 17px;
+  height: 17px;
+  border: 1px solid #d6d6d6;
+  border-radius: 50%;
+}

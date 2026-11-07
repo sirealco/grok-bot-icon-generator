@@ -21,6 +21,7 @@ export type Config = {
   eyes: string;
   color: string;
   outline: boolean;
+  outlineColor: "#000000" | "#FFFFFF";
   thickness: number;
   background: string | null;
   position: Point;
@@ -31,6 +32,7 @@ export const DEFAULT: Config = {
   eyes: "eyes-01",
   color: "#FA2D9C",
   outline: false,
+  outlineColor: "#000000",
   thickness: 8,
   background: null,
   position: { x: 566, y: 408 },
@@ -137,6 +139,7 @@ export function fingerprint(config: Config) {
     config.color,
     config.outline,
     config.outline ? config.thickness : 0,
+    config.outline ? (config.outlineColor ?? "#000000") : null,
     config.background,
     Math.round(config.position.x * 10) / 10,
     Math.round(config.position.y * 10) / 10,
@@ -150,6 +153,9 @@ export function validateConfig(raw: unknown): Config | null {
     !eyes.some((e) => e.id === c.eyes) ||
     !palette.some((p) => p.hex === c.color) ||
     typeof c.outline !== "boolean" ||
+    (c.outlineColor !== undefined &&
+      c.outlineColor !== "#000000" &&
+      c.outlineColor !== "#FFFFFF") ||
     !Number.isFinite(c.thickness) ||
     c.thickness < 2 ||
     c.thickness > 24 ||
@@ -159,11 +165,12 @@ export function validateConfig(raw: unknown): Config | null {
     !Number.isFinite(c.position.y)
   )
     return null;
-  const clean = {
+  const clean: Config = {
     shape: c.shape,
     eyes: c.eyes,
     color: c.color,
     outline: c.outline,
+    outlineColor: c.outlineColor ?? "#000000",
     thickness: c.thickness,
     background: c.background,
     position: { x: c.position.x, y: c.position.y },

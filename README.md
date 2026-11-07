@@ -6,7 +6,7 @@ A browser-based icon maker with 13 fixed face silhouettes, 12 eye pairs, and an 
 
 - Fixed shapes, sizes and rotations; no custom shapes or arbitrary color input.
 - Move paired eyes by pointer/touch or keyboard arrows (Shift for a larger step). Movement follows the shape contour; switching assets fits the eyes to a valid location.
-- Optional black face outline with 2–24px outward thickness.
+- Optional black or white face outline with 2–24px outward thickness.
 - Transparent or palette-color background.
 - Independent 1024×1024 PNG and standalone SVG downloads.
 - Randomize, reset and English/Korean UI (English by default).

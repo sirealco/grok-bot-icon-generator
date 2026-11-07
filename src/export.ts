@@ -2,7 +2,7 @@ import { eyes, shapes, type Config, type Candidate } from "./model";
 export function svgMarkup(config: Config) {
   const shape = shapes.find((s) => s.id === config.shape)!;
   const eye = eyes.find((e) => e.id === config.eyes)!;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">${config.background ? `<rect width="1024" height="1024" fill="${config.background}"/>` : ""}<path d="${shape.d}" fill="${config.color}"${config.outline ? ` stroke="#000000" stroke-width="${config.thickness * 2}" stroke-linejoin="round" paint-order="stroke fill"` : ""}/><path d="${eye.d}" fill="#ffffff" transform="translate(${config.position.x} ${config.position.y})"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">${config.background ? `<rect width="1024" height="1024" fill="${config.background}"/>` : ""}<path d="${shape.d}" fill="${config.color}"${config.outline ? ` stroke="${config.outlineColor}" stroke-width="${config.thickness * 2}" stroke-linejoin="round" paint-order="stroke fill"` : ""}/><path d="${eye.d}" fill="#ffffff" transform="translate(${config.position.x} ${config.position.y})"/></svg>`;
 }
 export async function pngBlob(config: Config): Promise<Blob> {
   const url = URL.createObjectURL(

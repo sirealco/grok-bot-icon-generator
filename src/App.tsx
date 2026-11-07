@@ -397,6 +397,29 @@ export default function App() {
                   <span>24 px</span>
                 </div>
               </div>
+              <fieldset className="outline-colors" disabled={!config.outline}>
+                <legend>{t.outlineColor}</legend>
+                <div className="outline-color-options">
+                  {(["#000000", "#FFFFFF"] as const).map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      aria-pressed={config.outlineColor === color}
+                      className={
+                        config.outlineColor === color ? "selected" : ""
+                      }
+                      onClick={() => patch({ outlineColor: color })}
+                    >
+                      <span
+                        className="outline-swatch"
+                        style={{ background: color }}
+                      />
+                      {color === "#000000" ? t.black : t.white}
+                      {config.outlineColor === color && <Check size={13} />}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
               <div className="outline-example">
                 <svg viewBox="0 0 200 180" aria-hidden="true">
                   <circle
@@ -404,7 +427,7 @@ export default function App() {
                     cy="90"
                     r="57"
                     fill={config.color}
-                    stroke={config.outline ? "#000" : "none"}
+                    stroke={config.outline ? config.outlineColor : "none"}
                     strokeWidth={config.thickness / 3}
                   />
                   <g fill="white" transform="rotate(-25 100 90)">
