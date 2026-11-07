@@ -29,6 +29,7 @@ import {
   shapes,
   eyes,
   palette,
+  backgroundPalette,
   changeConfig,
   randomConfig,
   fitPosition,
@@ -446,6 +447,7 @@ export default function App() {
                 <ColorPicker
                   lang={lang}
                   value={config.background}
+                  colors={backgroundPalette}
                   onChange={(background) => patch({ background })}
                 />
               ) : (
@@ -726,14 +728,16 @@ function ColorPicker({
   lang,
   value,
   onChange,
+  colors = palette,
 }: {
   lang: Lang;
   value: string;
   onChange: (color: string) => void;
+  colors?: readonly { hex: string; en: string; ko: string }[];
 }) {
   return (
     <div className="palette-grid" aria-label={copy[lang].color}>
-      {palette.map((color) => (
+      {colors.map((color) => (
         <button
           key={color.hex}
           className={`color-option ${value === color.hex ? "selected" : ""}`}
@@ -742,9 +746,19 @@ function ColorPicker({
           aria-pressed={value === color.hex}
           onClick={() => onChange(color.hex)}
         >
-          <span className="color-circle" style={{ background: color.hex }}>
+          <span
+            className="color-circle"
+            style={{
+              background: color.hex,
+              border: color.hex === "#FFFFFF" ? "1px solid #ccc" : undefined,
+            }}
+          >
             {value === color.hex && (
-              <Check size={19} color="white" strokeWidth={2} />
+              <Check
+                size={19}
+                color={color.hex === "#FFFFFF" ? "#111" : "white"}
+                strokeWidth={2}
+              />
             )}
           </span>
           <span className="color-name">{color[lang]}</span>

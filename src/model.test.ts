@@ -4,6 +4,7 @@ import { Resvg } from "@resvg/resvg-js";
 import {
   DEFAULT,
   backgroundPairs,
+  backgroundPalette,
   colorContrast,
   shapes,
   eyes,
@@ -234,7 +235,7 @@ test("curated random backgrounds cover the brand palette with distinct readable 
   for (const color of allowed) {
     assert.ok(backgroundPairs[color].length >= 2);
     for (const background of backgroundPairs[color]) {
-      assert.ok(allowed.has(background));
+      assert.ok(backgroundPalette.some((p) => p.hex === background));
       assert.notEqual(color, background);
       assert.ok(
         colorContrast(color, background) >= 1.35,
@@ -242,4 +243,17 @@ test("curated random backgrounds cover the brand palette with distinct readable 
       );
     }
   }
+});
+
+test("white is a background-only option and survives candidate restoration and export", () => {
+  const config = { ...DEFAULT, background: "#FFFFFF" };
+  assert.ok(validateConfig(config));
+  assert.equal(validateConfig({ ...DEFAULT, color: "#FFFFFF" }), null);
+  assert.equal(
+    parseCollection(JSON.stringify([{ id: "white-bg", config }]))[0].config
+      .background,
+    "#FFFFFF",
+  );
+  const pixels = new Resvg(svgMarkup(config)).render().pixels;
+  assert.deepEqual([...pixels.slice(0, 4)], [255, 255, 255, 255]);
 });

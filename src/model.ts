@@ -14,6 +14,11 @@ export const palette = [
   { hex: "#FA2D9C", en: "Pink", ko: "분홍" },
   { hex: "#969695", en: "Gray", ko: "회색" },
 ] as const;
+export const backgroundPalette = [
+  ...palette,
+  { hex: "#FFFFFF", en: "White", ko: "흰색" },
+] as const;
+
 export type Lang = "en" | "ko";
 export type Point = { x: number; y: number };
 export type Config = {
@@ -113,17 +118,25 @@ export function changeConfig(config: Config, patch: Partial<Config>): Config {
 }
 // Curated warm/cool and complementary pairings within the fixed brand palette.
 export const backgroundPairs: Record<string, readonly string[]> = {
-  "#000000": ["#FF9809", "#10C377", "#10B6A6", "#2085FF", "#FA2D9C", "#969695"],
-  "#A46D38": ["#FF9809", "#10B6A6", "#000000"],
-  "#FF2844": ["#10B6A6", "#10C377", "#000000"],
-  "#FF6B08": ["#8D53FF", "#A46D38", "#000000"],
-  "#FF9809": ["#8D53FF", "#2085FF", "#A46D38", "#000000"],
-  "#10C377": ["#8D53FF", "#A46D38", "#000000"],
-  "#10B6A6": ["#8D53FF", "#A46D38", "#000000"],
-  "#2085FF": ["#FF9809", "#000000"],
-  "#8D53FF": ["#FF9809", "#10C377", "#10B6A6", "#000000"],
-  "#FA2D9C": ["#10B6A6", "#FF9809", "#000000"],
-  "#969695": ["#8D53FF", "#000000"],
+  "#000000": [
+    "#FF9809",
+    "#10C377",
+    "#10B6A6",
+    "#2085FF",
+    "#FA2D9C",
+    "#969695",
+    "#FFFFFF",
+  ],
+  "#A46D38": ["#FF9809", "#10B6A6", "#000000", "#FFFFFF"],
+  "#FF2844": ["#10B6A6", "#10C377", "#000000", "#FFFFFF"],
+  "#FF6B08": ["#8D53FF", "#A46D38", "#000000", "#FFFFFF"],
+  "#FF9809": ["#8D53FF", "#2085FF", "#A46D38", "#000000", "#FFFFFF"],
+  "#10C377": ["#8D53FF", "#A46D38", "#000000", "#FFFFFF"],
+  "#10B6A6": ["#8D53FF", "#A46D38", "#000000", "#FFFFFF"],
+  "#2085FF": ["#FF9809", "#000000", "#FFFFFF"],
+  "#8D53FF": ["#FF9809", "#10C377", "#10B6A6", "#000000", "#FFFFFF"],
+  "#FA2D9C": ["#10B6A6", "#FF9809", "#000000", "#FFFFFF"],
+  "#969695": ["#8D53FF", "#000000", "#FFFFFF"],
 };
 export function colorContrast(a: string, b: string) {
   const luminance = (hex: string) => {
@@ -189,7 +202,8 @@ export function validateConfig(raw: unknown): Config | null {
     !Number.isFinite(c.thickness) ||
     c.thickness < 2 ||
     c.thickness > 24 ||
-    (c.background !== null && !palette.some((p) => p.hex === c.background)) ||
+    (c.background !== null &&
+      !backgroundPalette.some((p) => p.hex === c.background)) ||
     !c.position ||
     !Number.isFinite(c.position.x) ||
     !Number.isFinite(c.position.y)

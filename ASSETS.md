@@ -37,4 +37,4 @@ The script updates only the seven source-backed shapes and their collision bound
 
 Eye pairs were extracted from the 12 originally supplied color SVGs; pair proportions are retained. They are unchanged by this shape correction.
 
-The palette is the existing screenshot-matched 11-color palette, unchanged by this update. Exact HEX values still require confirmation against source artwork; white remains reserved for eyes rather than an extra selectable color.
+The palette is the existing screenshot-matched 11-color palette, unchanged by this update. Exact HEX values still require confirmation against source artwork; white is now additionally available as a background-only choice. The selectable face palette still has 11 colors.

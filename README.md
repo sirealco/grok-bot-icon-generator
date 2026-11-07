@@ -7,7 +7,7 @@ A browser-based icon maker with 13 fixed face silhouettes, 12 eye pairs, and an 
 - Fixed shapes, sizes and rotations; no custom shapes or arbitrary color input.
 - Move paired eyes by pointer/touch or keyboard arrows (Shift for a larger step). Movement follows the shape contour; switching assets fits the eyes to a valid location.
 - Optional black or white face outline with 2–24px outward thickness.
-- Transparent or palette-color background.
+- Transparent or solid background: the 11 brand colors plus white. White is background-only, and is also included in curated random background choices.
 - Independent 1024×1024 PNG and standalone SVG downloads.
 - Randomize selects a face color and solid background together from curated brand-palette pairings. Identical colors are excluded and low-contrast pairs receive a separating outline. Manual transparent backgrounds remain available. Reset and English/Korean UI (English by default) are supported.
 - Local collection: add, reopen, update, remove, confirm before clearing; identical visible results are deduplicated.
