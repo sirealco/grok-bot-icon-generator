@@ -17,6 +17,8 @@ import {
 } from "./model";
 import { svgMarkup, collectionZip } from "./export";
 import JSZip from "jszip";
+import fs from "node:fs";
+import { createHash } from "node:crypto";
 test("all 156 shape/eye combinations fit with complete eye boundaries inside the face", () => {
   assert.equal(shapes.length, 13);
   assert.equal(eyes.length, 12);
@@ -129,4 +131,51 @@ test("collection SVG ZIP preserves candidate settings and sequential filenames",
     svgMarkup(second),
   );
   assert.equal(progress.at(-1), 100);
+});
+
+test("seven source-backed shapes reproduce the uploaded contours without rotation or distortion", () => {
+  let checked = 0;
+  for (const shape of shapes) {
+    const source = shape as typeof shape &
+      Partial<{
+        sourceFile: string;
+        sourceTransform: number[];
+        sourceSha256: string;
+      }>;
+    if (!source.sourceFile || !source.sourceTransform) continue;
+    const xml = fs.readFileSync(
+      new URL(`../${source.sourceFile}`, import.meta.url),
+      "utf8",
+    );
+    assert.equal(
+      createHash("sha256").update(xml).digest("hex"),
+      source.sourceSha256,
+    );
+    const compound = [...xml.matchAll(/<path\b[^>]*\bd="([^"]+)"/g)]
+      .map((match) => match[1])
+      .find((d) => (d.match(/[zZ]/g) ?? []).length === 3);
+    assert.ok(compound, shape.id);
+    const original = compound.split(/[zZ]/)[0] + "Z";
+    const [sx, b, c, sy] = source.sourceTransform;
+    assert.equal(sx, sy, `${shape.id}: aspect ratio changed`);
+    assert.equal(b, 0, `${shape.id}: rotated`);
+    assert.equal(c, 0, `${shape.id}: skewed`);
+    const raster = (body: string) =>
+      new Resvg(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 1024 1024">${body}</svg>`,
+      ).render().pixels;
+    const expected = raster(
+      `<path d="${original}" transform="matrix(${source.sourceTransform.join(" ")})"/>`,
+    );
+    const actual = raster(`<path d="${shape.d}"/>`);
+    let difference = 0;
+    for (let i = 3; i < actual.length; i += 4)
+      difference += Math.abs(actual[i] - expected[i]);
+    assert.ok(
+      difference < 100,
+      `${shape.id}: raster differs from source (${difference})`,
+    );
+    checked++;
+  }
+  assert.equal(checked, 7);
 });
