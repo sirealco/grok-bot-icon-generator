@@ -1,6 +1,6 @@
 # Grok Bot Icon Generator
 
-A browser-based icon maker with 13 fixed face silhouettes, 12 eye pairs, and an 11-color palette. Select options on the left and move the eye pair directly on the live preview on the right.
+A browser-based icon maker with 13 fixed face silhouettes, 12 eye pairs, and an 11-color palette. Select options on the left, move paired eyes on the central preview, and save/download from the right-hand action panel.
 
 ## Features
 
@@ -51,7 +51,11 @@ See [ASSETS.md](ASSETS.md). Some selection-image silhouettes have no matching su
 
 Automated checks cover all 156 shape/eye combinations, constrained movement, invalid saved settings, 120 random faces, transparent/solid backgrounds, all 13 shapes at maximum outline thickness, 1024px raster dimensions, and standalone SVG ZIP content.
 
-The managed environment did not expose its required `cua_repl.js` browser-control tool. Actual interactive browser QA (including mobile Safari downloads and touch gestures) remains to be performed; an installed browser alone was not treated as a completed browser test.
+The current layout uses a 16pt (21.33px) base font and a viewport-height desktop workspace. The action panel contains randomize, add, individual downloads, the collection, and ZIP export. Only the candidate list scrolls when full; the export button stays visible. On narrow screens, the interface stacks vertically with current-icon actions immediately below the preview.
+
+Automated Chromium browser QA covers English and Korean at 1280×720, 1366×768, 1440×900 and 1920×1080. The page has no horizontal/vertical overflow at these sizes, including with 36 candidates and an active edit. The candidate list scrolls independently. A 390×844 mobile layout was inspected for horizontal overflow. Real browser downloads were checked for 1024×1024 PNG, the selected white outline in SVG, and a ZIP containing two candidates in both formats. Candidate reload and clear-cancel behavior were also verified. Mobile Safari and physical touch gestures are not covered by these Chromium checks.
+
+UI copy was simplified with reference to [unslop](https://github.com/theclaymethod/unslop), which is a prose-clarity guide, not a CSS framework. The existing Grok Bot black-and-white design and fixed palette remain in use.
 
 ## Usage terms
 

@@ -205,7 +205,6 @@ export default function App() {
           </span>
         </a>
         <div className="header-right">
-          <span className="free-label">{t.free}</span>
           <div className="language" aria-label="Language / 언어">
             <Globe size={15} />
             <button aria-pressed={lang === "en"} onClick={() => setLang("en")}>
@@ -221,15 +220,10 @@ export default function App() {
       <div className="editor-layout">
         <aside className="rail">
           <div className="rail-intro">
-            <span className="eyebrow">MAKE IT YOURS</span>
-            <h1>
-              Grok Bot
-              <br />
-              Icon Generator<span className="title-dot">.</span>
-            </h1>
+            <h1>{lang === "en" ? "Icon generator" : "아이콘 제너레이터"}</h1>
           </div>
           <nav aria-label={lang === "en" ? "Icon options" : "아이콘 옵션"}>
-            {tabs.map(({ id, icon: Symbol }, i) => (
+            {tabs.map(({ id, icon: Symbol }) => (
               <button
                 key={id}
                 className={`nav-item ${tab === id ? "active" : ""}`}
@@ -238,25 +232,13 @@ export default function App() {
               >
                 <Symbol size={19} strokeWidth={1.7} />
                 <span>{t[id]}</span>
-                <span className="nav-number">0{i + 1}</span>
               </button>
             ))}
           </nav>
-          <div className="rail-bottom">
-            <span className="tiny-face" aria-hidden="true">
-              <i />
-              <i />
-            </span>
-            <p>{t.subtitle}</p>
-            <span className="rail-version">GROK BOT / 001</span>
-          </div>
         </aside>
         <section className="options" aria-labelledby="options-title">
           <div className="options-heading">
             <div>
-              <span className="eyebrow">
-                0{tabs.findIndex((x) => x.id === tab) + 1} / 05
-              </span>
               <h2 id="options-title">{t[tab]}</h2>
             </div>
             <span className="option-count">
@@ -476,29 +458,12 @@ export default function App() {
               )}
             </>
           )}
-          <div className="options-footer">
-            <span>
-              {tab === "eyes"
-                ? t.countEyes
-                : tab === "color" || tab === "background"
-                  ? t.countColors
-                  : t.countShapes}
-            </span>
-            <span>GROK BOT</span>
-          </div>
         </section>
         <main className="workspace">
           <section className="preview-section" aria-labelledby="preview-title">
             <div className="preview-heading">
               <div>
-                <span className="eyebrow">
-                  <span className="live-dot" />
-                  {t.live}
-                </span>
-                <h2 id="preview-title">
-                  {t.preview}
-                  <span className="small-dot">.</span>
-                </h2>
+                <h2 id="preview-title">{t.preview}</h2>
               </div>
               <span className="size-badge">{t.size}</span>
             </div>
@@ -527,192 +492,187 @@ export default function App() {
                 keyboardLabel={t.keyboard}
                 onMove={(position) => patch({ position })}
               />
-              <div className="canvas-corners" aria-hidden="true">
-                <span />
-                <span />
-                <span />
-                <span />
-              </div>
             </div>
             <div className="drag-hint">
               <Move size={13} />
               <span>{t.drag}</span>
             </div>
-            <div className="preview-actions">
-              <div className="utility-actions">
-                <button
-                  onClick={() => {
-                    setConfig(randomConfig());
-                    setEditing(null);
-                  }}
-                  className="outline-button"
-                >
-                  <Shuffle size={16} />
-                  {t.random}
-                </button>
-                <button
-                  onClick={() => {
-                    setConfig(structuredClone(DEFAULT));
-                    setEditing(null);
-                    setNotice("resetDone");
-                  }}
-                  className="icon-button"
-                  aria-label={t.reset}
-                  title={t.reset}
-                >
-                  <RotateCcw size={17} />
-                </button>
-              </div>
-              <button className="primary-button add-button" onClick={add}>
-                <Plus size={17} />
-                {t.add}
-              </button>
-            </div>
-            {editing && (
-              <button className="update-button" onClick={update}>
-                <CheckCheck size={16} />
-                {t.update}
-              </button>
-            )}
-            <div className="individual-downloads">
-              <span>{t.downloadHint}</span>
-              <div>
-                <button
-                  aria-label={t.png}
-                  title={t.png}
-                  disabled={busy}
-                  onClick={() =>
-                    void runExport(() => downloadIcon(config, "png"))
-                  }
-                >
-                  <ArrowDown size={14} />
-                  PNG
-                </button>
-                <span className="download-divider" />
-                <button
-                  aria-label={t.svg}
-                  title={t.svg}
-                  disabled={busy}
-                  onClick={() =>
-                    void runExport(() => downloadIcon(config, "svg"))
-                  }
-                >
-                  <ArrowDown size={14} />
-                  SVG
-                </button>
-              </div>
-            </div>
           </section>
-          <section className="collection" aria-labelledby="collection-title">
-            <div className="collection-heading">
-              <h2 id="collection-title">
-                {t.collection}
-                <span className="count-badge">{items.length}</span>
-              </h2>
-              <button
-                className="clear-button"
-                disabled={!items.length || busy}
-                onClick={() => setConfirm(true)}
-              >
-                <Trash2 size={13} />
-                {t.clear}
-              </button>
-            </div>
-            <p className="collection-description">{t.collectionNote}</p>
-            {!items.length ? (
-              <div className="empty-collection">
-                <span className="empty-icon">
-                  <FolderHeart size={23} strokeWidth={1.3} />
-                </span>
-                <div>
-                  <strong>{t.empty}</strong>
-                  <p>{t.emptyNote}</p>
-                </div>
-                <Plus size={18} className="empty-plus" />
-              </div>
-            ) : (
-              <div className="candidate-grid">
-                {items.map((item, i) => (
-                  <div
-                    key={item.id}
-                    className={`candidate ${editing === item.id ? "is-editing" : ""}`}
+          <aside className="action-panel" aria-label={t.actions}>
+            <div className="current-actions">
+              <div className="preview-actions">
+                <div className="utility-actions">
+                  <button
+                    onClick={() => {
+                      setConfig(randomConfig());
+                      setEditing(null);
+                    }}
+                    className="outline-button"
                   >
-                    <button
-                      className={`candidate-preview ${item.config.background === null ? "checker" : ""}`}
-                      onClick={() => load(item)}
-                      aria-label={`${t.edit} ${i + 1}`}
-                    >
-                      <Icon config={item.config} />
-                    </button>
-                    <div className="candidate-meta">
-                      <span>#{String(i + 1).padStart(2, "0")}</span>
-                      <button
-                        onClick={() => remove(item.id)}
-                        aria-label={`${t.remove} ${i + 1}`}
-                      >
-                        <X size={13} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                    <Shuffle size={16} />
+                    {t.random}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setConfig(structuredClone(DEFAULT));
+                      setEditing(null);
+                      setNotice("resetDone");
+                    }}
+                    className="icon-button"
+                    aria-label={t.reset}
+                    title={t.reset}
+                  >
+                    <RotateCcw size={17} />
+                  </button>
+                </div>
+                <button className="primary-button add-button" onClick={add}>
+                  <Plus size={17} />
+                  {t.add}
+                </button>
               </div>
-            )}
-            <div className="collection-export">
-              <label className="format-select">
-                <span className="sr-only">{t.format}</span>
-                <select
-                  value={format}
-                  onChange={(e) => setFormat(e.target.value as ExportFormat)}
-                  disabled={busy}
-                >
-                  <option value="png">PNG</option>
-                  <option value="svg">SVG</option>
-                  <option value="both">PNG + SVG</option>
-                </select>
-                <ChevronRight size={13} />
-              </label>
-              <button
-                className="primary-button export-button"
-                disabled={!items.length || busy}
-                onClick={exportAll}
-              >
-                {busy ? (
-                  <LoaderCircle className="spin" size={16} />
-                ) : (
-                  <Download size={16} />
-                )}
-                <span>
-                  {progress !== null
-                    ? `${t.exporting} ${progress}%`
-                    : t.downloadAll}
-                </span>
-                <span className="zip-label">.ZIP</span>
-              </button>
+              {editing && (
+                <button className="update-button" onClick={update}>
+                  <CheckCheck size={16} />
+                  {t.update}
+                </button>
+              )}
+              <div className="individual-downloads">
+                <span>{t.downloadHint}</span>
+                <div>
+                  <button
+                    aria-label={t.png}
+                    title={t.png}
+                    disabled={busy}
+                    onClick={() =>
+                      void runExport(() => downloadIcon(config, "png"))
+                    }
+                  >
+                    <ArrowDown size={14} />
+                    PNG
+                  </button>
+                  <span className="download-divider" />
+                  <button
+                    aria-label={t.svg}
+                    title={t.svg}
+                    disabled={busy}
+                    onClick={() =>
+                      void runExport(() => downloadIcon(config, "svg"))
+                    }
+                  >
+                    <ArrowDown size={14} />
+                    SVG
+                  </button>
+                </div>
+              </div>
             </div>
-            {progress !== null && (
-              <progress
-                className="export-progress"
-                max="100"
-                value={progress}
-                aria-label={t.exporting}
-              />
-            )}
-            <p className={`storage-note ${storageError ? "error" : ""}`}>
-              <span className="storage-dot" />
-              {storageError
-                ? t.storageError
-                : initial.error
-                  ? t.restoreError
-                  : t.local}
-            </p>
-            <p className="storage-detail">{t.localNote}</p>
-          </section>
-          <footer className="workspace-footer">
-            <span className="footer-face" aria-hidden="true">
-              ••
-            </span>
-            <p>{t.rights}</p>
-          </footer>
+            <section className="collection" aria-labelledby="collection-title">
+              <div className="collection-heading">
+                <h2 id="collection-title">
+                  {t.collection}
+                  <span className="count-badge">{items.length}</span>
+                </h2>
+                <button
+                  className="clear-button"
+                  disabled={!items.length || busy}
+                  onClick={() => setConfirm(true)}
+                >
+                  <Trash2 size={13} />
+                  {t.clear}
+                </button>
+              </div>
+              {!items.length ? (
+                <div className="empty-collection">
+                  <span className="empty-icon">
+                    <FolderHeart size={23} strokeWidth={1.3} />
+                  </span>
+                  <div>
+                    <strong>{t.empty}</strong>
+                  </div>
+                </div>
+              ) : (
+                <div className="candidate-grid">
+                  {items.map((item, i) => (
+                    <div
+                      key={item.id}
+                      className={`candidate ${editing === item.id ? "is-editing" : ""}`}
+                    >
+                      <button
+                        className={`candidate-preview ${item.config.background === null ? "checker" : ""}`}
+                        onClick={() => load(item)}
+                        aria-label={`${t.edit} ${i + 1}`}
+                      >
+                        <Icon config={item.config} />
+                      </button>
+                      <div className="candidate-meta">
+                        <span>#{String(i + 1).padStart(2, "0")}</span>
+                        <button
+                          onClick={() => remove(item.id)}
+                          aria-label={`${t.remove} ${i + 1}`}
+                        >
+                          <X size={13} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="collection-export">
+                <label className="format-select">
+                  <span className="sr-only">{t.format}</span>
+                  <select
+                    value={format}
+                    onChange={(e) => setFormat(e.target.value as ExportFormat)}
+                    disabled={busy}
+                  >
+                    <option value="png">PNG</option>
+                    <option value="svg">SVG</option>
+                    <option value="both">PNG + SVG</option>
+                  </select>
+                  <ChevronRight size={13} />
+                </label>
+                <button
+                  className="primary-button export-button"
+                  aria-label={
+                    progress !== null
+                      ? `${t.exporting} ${progress}%`
+                      : t.downloadAll
+                  }
+                  disabled={!items.length || busy}
+                  onClick={exportAll}
+                >
+                  {busy ? (
+                    <LoaderCircle className="spin" size={16} />
+                  ) : (
+                    <Download size={16} />
+                  )}
+                  <span>
+                    {progress !== null ? `${progress}%` : t.downloadAll}
+                  </span>
+                  <span className="zip-label">.ZIP</span>
+                </button>
+              </div>
+              {progress !== null && (
+                <progress
+                  className="export-progress"
+                  max="100"
+                  value={progress}
+                  aria-label={t.exporting}
+                />
+              )}
+              {(storageError || initial.error) && (
+                <p className="storage-note error" role="alert">
+                  {storageError ? t.storageError : t.restoreError}
+                </p>
+              )}
+              <details className="storage-info">
+                <summary>{t.local}</summary>
+                <p>{t.localNote}</p>
+              </details>
+            </section>
+            <footer className="workspace-footer">
+              <p>{t.rights}</p>
+            </footer>
+          </aside>
         </main>
       </div>
       <div
