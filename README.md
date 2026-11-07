@@ -9,7 +9,7 @@ A browser-based icon maker with 13 fixed face silhouettes, 12 eye pairs, and an 
 - Optional black or white face outline with 2–24px outward thickness.
 - Transparent or palette-color background.
 - Independent 1024×1024 PNG and standalone SVG downloads.
-- Randomize, reset and English/Korean UI (English by default).
+- Randomize selects a face color and solid background together from curated brand-palette pairings. Identical colors are excluded and low-contrast pairs receive a separating outline. Manual transparent backgrounds remain available. Reset and English/Korean UI (English by default) are supported.
 - Local collection: add, reopen, update, remove, confirm before clearing; identical visible results are deduplicated.
 - Download the entire collection as PNG, SVG, or both in a ZIP with sequential filenames. Each candidate retains its own background, outline and eye position.
 - Saved candidate settings survive reload in the same browser. No account, backend, tracking, image upload or API key is required. Browser storage failures are surfaced in the UI.
@@ -53,7 +53,7 @@ Automated checks cover all 156 shape/eye combinations, constrained movement, inv
 
 The current layout uses a 16pt (21.33px) base font and a viewport-height desktop workspace. The action panel contains randomize, add, individual downloads, the collection, and ZIP export. Only the candidate list scrolls when full; the export button stays visible. On narrow screens, the interface stacks vertically with current-icon actions immediately below the preview.
 
-Automated Chromium browser QA covers English and Korean at 1280×720, 1366×768, 1440×900 and 1920×1080. The page has no horizontal/vertical overflow at these sizes, including with 36 candidates and an active edit. The candidate list scrolls independently. A 390×844 mobile layout was inspected for horizontal overflow. Real browser downloads were checked for 1024×1024 PNG, the selected white outline in SVG, and a ZIP containing two candidates in both formats. Candidate reload and clear-cancel behavior were also verified. Mobile Safari and physical touch gestures are not covered by these Chromium checks.
+Automated Chromium browser QA covers English and Korean at 1280×720, 1366×768, 1440×900 and 1920×1080. The page has no horizontal/vertical overflow at these sizes, including with 36 candidates and an active edit. The candidate list scrolls independently. Mobile Chromium touch emulation was also checked in English and Korean at 320×640, 360×740, 375×812, 390×844, 414×896 and 430×932. Checks cover horizontal overflow, touch-dragging the eyes, random face/background colors, candidate creation and export button sizing. Mobile PNG/ZIP downloads and restored candidates were verified at 390×844. Real browser downloads were checked for 1024×1024 PNG, the selected white outline in SVG, and a ZIP containing two candidates in both formats. Candidate reload and clear-cancel behavior were also verified. Physical-device behavior and iPhone Safari are not covered by these Chromium emulation checks.
 
 UI copy was simplified with reference to [unslop](https://github.com/theclaymethod/unslop), which is a prose-clarity guide, not a CSS framework. The existing Grok Bot black-and-white design and fixed palette remain in use.
 

@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { Resvg } from "@resvg/resvg-js";
 import {
   DEFAULT,
+  backgroundPairs,
+  colorContrast,
   shapes,
   eyes,
   palette,
@@ -69,6 +71,10 @@ test("random faces use only permitted assets and valid positions", () => {
   for (let i = 0; i < 120; i++) {
     const c = randomConfig();
     assert.ok(validateConfig(c));
+    assert.ok(c.background);
+    assert.notEqual(c.background, c.color);
+    assert.ok(backgroundPairs[c.color].includes(c.background));
+    if (colorContrast(c.color, c.background) < 2) assert.equal(c.outline, true);
     assert.ok(isValidPosition(c, c.position));
   }
 });
@@ -219,5 +225,21 @@ test("SVG rasterization uses the selected white or black outline", () => {
       [...pixels.slice(offset, offset + 4)],
       [channel, channel, channel, 255],
     );
+  }
+});
+
+test("curated random backgrounds cover the brand palette with distinct readable pairings", () => {
+  const allowed = new Set<string>(palette.map((p) => p.hex));
+  assert.equal(Object.keys(backgroundPairs).length, palette.length);
+  for (const color of allowed) {
+    assert.ok(backgroundPairs[color].length >= 2);
+    for (const background of backgroundPairs[color]) {
+      assert.ok(allowed.has(background));
+      assert.notEqual(color, background);
+      assert.ok(
+        colorContrast(color, background) >= 1.35,
+        `${color}/${background}`,
+      );
+    }
   }
 });

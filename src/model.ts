@@ -111,8 +111,36 @@ export function changeConfig(config: Config, patch: Partial<Config>): Config {
     next.position = fitPosition(next, next.position);
   return next;
 }
+// Curated warm/cool and complementary pairings within the fixed brand palette.
+export const backgroundPairs: Record<string, readonly string[]> = {
+  "#000000": ["#FF9809", "#10C377", "#10B6A6", "#2085FF", "#FA2D9C", "#969695"],
+  "#A46D38": ["#FF9809", "#10B6A6", "#000000"],
+  "#FF2844": ["#10B6A6", "#10C377", "#000000"],
+  "#FF6B08": ["#8D53FF", "#A46D38", "#000000"],
+  "#FF9809": ["#8D53FF", "#2085FF", "#A46D38", "#000000"],
+  "#10C377": ["#8D53FF", "#A46D38", "#000000"],
+  "#10B6A6": ["#8D53FF", "#A46D38", "#000000"],
+  "#2085FF": ["#FF9809", "#000000"],
+  "#8D53FF": ["#FF9809", "#10C377", "#10B6A6", "#000000"],
+  "#FA2D9C": ["#10B6A6", "#FF9809", "#000000"],
+  "#969695": ["#8D53FF", "#000000"],
+};
+export function colorContrast(a: string, b: string) {
+  const luminance = (hex: string) => {
+    const rgb = [1, 3, 5]
+      .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
+  };
+  const x = luminance(a),
+    y = luminance(b);
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}
 export function randomConfig(): Config {
   const color = palette[Math.floor(Math.random() * palette.length)].hex;
+  const backgrounds = backgroundPairs[color];
+  const background =
+    backgrounds[Math.floor(Math.random() * backgrounds.length)];
   const shape = shapes[Math.floor(Math.random() * shapes.length)].id;
   const eye = eyes[Math.floor(Math.random() * eyes.length)].id;
   const next = {
@@ -120,9 +148,11 @@ export function randomConfig(): Config {
     shape,
     eyes: eye,
     color,
-    outline: Math.random() < 0.25,
+    outline: colorContrast(color, background) < 2 || Math.random() < 0.25,
+    outlineColor:
+      background === "#000000" ? ("#FFFFFF" as const) : ("#000000" as const),
     thickness: [4, 8, 12, 16][Math.floor(Math.random() * 4)],
-    background: null,
+    background,
   };
   return {
     ...next,
